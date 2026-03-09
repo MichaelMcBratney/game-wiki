@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --wiki-bg: #0d0d12;
+  --wiki-surface: #16161d;
+  --wiki-border: #2a2a35;
+  --wiki-muted: #6b6b7b;
+  --wiki-accent: #8b5cf6;
+  --wiki-gold: #d4af37;
+}
+
+@layer base {
+  html {
+    @apply antialiased;
+  }
+  body {
+    @apply bg-wiki-bg text-gray-100 font-body;
+  }
+}
+
+/* Prose styling for wiki content */
+.wiki-prose h1 {
+  @apply text-2xl font-display font-bold text-wiki-gold border-b border-wiki-border pb-2 mb-4;
+}
+.wiki-prose h2 {
+  @apply text-xl font-display font-semibold mt-6 mb-2 text-wiki-accent;
+}
+.wiki-prose h3 {
+  @apply text-lg font-display font-semibold mt-4 mb-2 text-gray-200;
+}
+.wiki-prose p {
+  @apply mb-3 leading-relaxed text-gray-300;
+}
+.wiki-prose a {
+  @apply text-wiki-accent hover:text-wiki-accent-hover underline underline-offset-2;
+}
+.wiki-prose ul, .wiki-prose ol {
+  @apply mb-3 pl-6 text-gray-300;
+}
+.wiki-prose li {
+  @apply mb-1;
+}
+.wiki-prose code {
+  @apply bg-wiki-surface px-1.5 py-0.5 rounded text-sm text-wiki-gold;
+}
+.wiki-prose pre {
+  @apply bg-wiki-surface p-4 rounded-lg overflow-x-auto mb-3 border border-wiki-border;
+}
+.wiki-prose pre code {
+  @apply bg-transparent p-0;
+}
+.wiki-prose blockquote {
+  @apply border-l-4 border-wiki-accent pl-4 italic text-wiki-muted my-3;
+}
+.wiki-prose table {
+  @apply w-full border-collapse border border-wiki-border mb-3;
+}
+.wiki-prose th, .wiki-prose td {
+  @apply border border-wiki-border px-3 py-2 text-left;
+}
+.wiki-prose th {
+  @apply bg-wiki-surface font-semibold text-wiki-gold;
+}

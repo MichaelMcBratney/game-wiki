@@ -1,0 +1,54 @@
+// Game Wiki - Prisma Schema
+// PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id          String   @id @default(cuid())
+  name        String
+  icon        String?  // Lucide icon name, e.g. "Sword", "Map"
+  description String?
+  pages       Page[]
+}
+
+model Page {
+  id                 String    @id @default(cuid())
+  title              String
+  slug               String    @unique
+  content            String?   // Denormalized for quick reads; source of truth is current Revision
+  categoryId         String?
+  category           Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  currentRevisionId  String?   @unique
+  currentRevision    Revision? @relation("CurrentRevision", fields: [currentRevisionId], references: [id], onDelete: SetNull)
+  revisions         Revision[] @relation("PageRevisions")
+  media              Media[]
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+}
+
+model Revision {
+  id              String   @id @default(cuid())
+  pageId          String
+  page            Page     @relation("PageRevisions", fields: [pageId], references: [id], onDelete: Cascade)
+  authorId        String?  // Optional: could be User model later
+  markdownContent String   @map("markdown_content")
+  changeSummary   String?  @map("change_summary")
+  createdAt       DateTime @default(now()) @map("created_at")
+  // Pages that use this revision as their current (one-to-one from Page side)
+  currentForPage  Page?    @relation("CurrentRevision")
+}
+
+model Media {
+  id     String  @id @default(cuid())
+  url    String
+  type   String  // e.g. "image", "video"
+  pageId String?
+  page   Page?   @relation(fields: [pageId], references: [id], onDelete: SetNull)
+}
