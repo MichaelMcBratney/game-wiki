@@ -48,7 +48,13 @@ export default async function WikiIndexPage({
         ))}
       </ul>
       {pages.length === 0 && (
-        <p className="text-wiki-muted">No pages yet. Create one from the edit page.</p>
+        <p className="text-wiki-muted">
+          No pages yet.{" "}
+          <Link href="/wiki/new" className="text-wiki-accent hover:underline">
+            Create your first page
+          </Link>
+          .
+        </p>
       )}
     </div>
   );

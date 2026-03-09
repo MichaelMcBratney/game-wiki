@@ -8,6 +8,7 @@ import {
   Users,
   Cog,
   Search,
+  Plus,
 } from "lucide-react";
 import { GlobalSearch } from "./GlobalSearch";
 
@@ -33,6 +34,13 @@ export function WikiLayout({ children }: { children: React.ReactNode }) {
           <div className="flex-1 max-w-xl mx-4">
             <GlobalSearch />
           </div>
+          <Link
+            href="/wiki/new"
+            className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-wiki-accent text-white hover:bg-wiki-accent-hover transition-colors shrink-0"
+          >
+            <Plus className="size-4" />
+            New page
+          </Link>
         </div>
       </header>
       <div className="flex flex-1 max-w-7xl w-full mx-auto px-4 py-6">

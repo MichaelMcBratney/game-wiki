@@ -32,10 +32,11 @@ git push -u origin main
 3. Import your **Game Wiki** repo. Leave **Framework Preset** as Next.js and **Root Directory** as `.`.
 4. **Environment variables:** open **Environment Variables** and add:
    - **Name:** `DATABASE_URL`  
-   - **Value:** your full Neon connection string (same as in `.env`), e.g.  
-     `postgresql://user:password@ep-xxx.region.aws.neon.tech/neondb?sslmode=require`
-   - Apply to **Production**, **Preview**, and **Development** if you use them.
+   - **Value:** your **Neon pooled** connection string (see below — do not use the direct connection on Vercel).
+   - Apply to **Production**, **Preview**, and **Development**.
 5. Click **Deploy**.
+
+**Important (Neon + Vercel):** Use Neon’s **pooled** connection string so serverless functions don’t exhaust connections. In the [Neon Dashboard](https://console.neon.tech) → your project → **Connection details**, choose the **Pooled** or **Connection pooling** option and copy that URL (it often has `-pooler` in the hostname, or a different port). Use that full URL as `DATABASE_URL`.
 
 Vercel will run `npm install`, `prisma generate` (via `postinstall`), and `next build`. When the build finishes, you get a URL like `https://your-project.vercel.app`.
 
@@ -74,3 +75,18 @@ Vercel will automatically build and deploy from the latest push. No need to run 
 - **Netlify:** Import repo, build command `npm run build`, publish directory `.next` (or use Netlify’s Next.js runtime). Add `DATABASE_URL` in Site settings → Environment variables.
 
 The app expects `DATABASE_URL` to be set in the environment; the rest of the hosting process is the same.
+
+---
+
+## Fixing “Application error” on Vercel
+
+If you see **Application error: a server-side exception has occurred**:
+
+1. **Check the real error**  
+   Vercel Dashboard → your project → **Logs** (or **Functions** → select a function → **Logs**). Open a failed request and read the exception message (e.g. “Can’t reach database”, “Invalid `prisma.page.findMany()`”, “DATABASE_URL is not defined”).
+
+2. **Set `DATABASE_URL` for Production**  
+   Project → **Settings** → **Environment Variables**. Ensure `DATABASE_URL` exists and is enabled for **Production** (and Preview if you use it). Redeploy after changing env vars.
+
+3. **Use Neon’s pooled connection**  
+   On serverless (Vercel), use the **pooled** connection string from Neon, not the direct one. In Neon: Connection details → **Pooled connection** (or similar). The host often looks like `ep-xxx-pooler.region.aws.neon.tech`. Replace your current `DATABASE_URL` in Vercel with this pooled URL and redeploy.
